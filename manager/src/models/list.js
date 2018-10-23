@@ -1,0 +1,55 @@
+import { queryFakeList, queryTaskList } from '../services/api';
+
+export default {
+  namespace: 'list',
+
+  state: {
+    list: [],
+    taskList: [],
+  },
+
+  effects: {
+    *fetch({ payload }, { call, put }) {
+      const response = yield call(queryFakeList, payload);
+      yield put({
+        type: 'queryList',
+        payload: Array.isArray(response) ? response : [],
+      });
+    },
+    *appendFetch({ payload }, { call, put }) {
+      const response = yield call(queryFakeList, payload);
+      yield put({
+        type: 'appendList',
+        payload: Array.isArray(response) ? response : [],
+      });
+    },
+    *getTaskList({ payload }, { call, put }){
+      const response = yield call(queryTaskList, payload);
+      yield put({
+        type: 'queryTaskList',
+        payload: Array.isArray(response) ? response : [],
+      });
+    },
+  },
+
+  reducers: {
+    queryList(state, action) {
+      return {
+        ...state,
+        list: action.payload,
+      };
+    },
+    appendList(state, action) {
+      return {
+        ...state,
+        list: state.list.concat(action.payload),
+      };
+    },
+    queryTaskList(state, action) {
+      return {
+        ...state,
+        taskList: action.payload,
+      };
+    },
+  },
+};
