@@ -18,6 +18,7 @@ import {
   message,
   Badge,
   Divider,
+  Upload,
 } from 'antd';
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -330,6 +331,24 @@ export default class TableList extends PureComponent {
     }],
     pagination:[{current:1,pageSize:10,total:46}]}
 
+    const Uploadprops = {
+      name: 'file',
+      action: '//jsonplaceholder.typicode.com/posts/',
+      headers: {
+        authorization: 'authorization-text',
+      },
+      onChange(info) {
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+          message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === 'error') {
+          message.error(`${info.file.name} file upload failed.`);
+        }
+      },
+    };
+
     const columns = [
       {
             title: '序号',
@@ -424,7 +443,7 @@ export default class TableList extends PureComponent {
           <Fragment>
             <a href="">详情</a>
             <Divider type="vertical" />
-            <a href="">上传文件</a>
+            <Upload {...Uploadprops}><Button title='上传' style={{border:'none',color:'#1890ff'}}><Icon type="upload" /></Button></Upload>
           </Fragment>
         ),
       },

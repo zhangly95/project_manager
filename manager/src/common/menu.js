@@ -22,6 +22,17 @@ const menuData = [
       },
     ],
   },
+  {
+    name: '设备管理',
+    icon: 'table',
+    path: 'device',
+    children: [
+      {
+        name: '设备列表',
+        path: 'device-list',
+      },  
+    ],
+  },
   
   {
     name: '计划管理',
