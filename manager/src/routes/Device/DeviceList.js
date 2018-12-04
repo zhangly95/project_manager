@@ -1,177 +1,362 @@
-import React, { Component, Fragment } from 'react';
-import { connect } from 'dva';
-import {
-  Row,
-  Col,
-  Icon,
-  Card,
-  Tabs,
-  Table,
-  Radio,
-  DatePicker,
-  Tooltip,
-  Menu,
-  Dropdown,
-} from 'antd';
-import numeral from 'numeral';
-import {
-  ChartCard,
-  yuan,
-  MiniArea,
-  MiniBar,
-  MiniProgress,
-  Field,
-  Bar,
-  Pie,
-  TimelineChart,
-} from 'components/Charts';
-import Trend from 'components/Trend';
-import NumberInfo from 'components/NumberInfo';
-import { getTimeDistance } from '../../utils/utils';
+import React, { Component,Fragment } from 'react';
+import {Row, Card, Table} from 'antd';
+// 引入 ECharts 主模块
+import echarts from 'echarts/lib/echarts';
+// 引入柱状图
+import 'echarts/lib/chart/tree';
+// 引入提示框和标题组件
+import 'echarts/lib/component/tooltip';
+import 'echarts/lib/component/title';
 
-import styles from './DeviceList.less';
+class EchartsTest extends Component {
+    state = {
+        selectedRowKeys: [], // Check here to configure the default column
+      };
 
-const { TabPane } = Tabs;
-const { RangePicker } = DatePicker;
+    componentDidMount() {
+        const data = {
+            "children": [
+                {
+                    "children": [
+                        {
+                            "children": [{
+                                "children": [],
+                                "name": "熔盐用量",
+                            },
+                            {
+                                "children": [],
+                                "name": "设计流量范围",       
+                            },
+                            {
+                                "children": [],
+                                "name": "保温层厚度",       
+                            },
+                            {
+                                "children": [],
+                                "name": "主回路总热损失",       
+                            },
+                            {
+                                "children": [],
+                                "name": "温升速率",       
+                            },
+                            {
+                                "children": [],
+                                "name": "散热功率",       
+                            },
+                            {
+                                "children": [],
+                                "name": "泵罐液位波动",       
+                            },
+                            {
+                                "children": [],
+                                "name": "触液材质",       
+                            },
+                        ],
+                            "name": "泵",
+                        },
+                        {
+                            "children": [],
+                            "name": "吸入管路系统",
+                        },
+                        {
+                            "children": [],
+                            "name": "吐出管路系统",
+                        },
+                        {
+                            "children": [],
+                            "name": "流量测量段",
+                        },
+                        {
+                            "children": [],
+                            "name": "流量调节段",
+                        },
+                        {
+                            "children": [],
+                            "name": "调节阀",
+                        },
+                    ],
+                    "name": "主回路",
+                },
+                {
+                    "children": [
+                        {
+                            "children": [],
+                            "name": "熔盐转运罐",
+                        },
+                        {
+                            "children": [],
+                            "name": "熔盐储罐",
+                        },
+                        {
+                            "children": [],
+                            "name": "截止阀",
+                        },
+                        {
+                            "children": [],
+                            "name": "冷冻阀",
+                        },
+                        {
+                            "children": [],
+                            "name": "液位计",
+                        },
+                        {
+                            "children": [],
+                            "name": "压力计",
+                        },
+                        {
+                            "children": [],
+                            "name": "气压计",
+                        },
+                    ],
+                    "name": "熔盐储存与加载系统",
+                },
+                {
+                    "children": [
+                        {
+                            "children": [],
+                            "name": "氩气钢瓶",
+                        },
+                        {
+                            "children": [],
+                            "name": "气体管道",
+                        },
+                        {
+                            "children": [],
+                            "name": "调节阀",
+                        },
+                        {
+                            "children": [],
+                            "name": "压力计",
+                        },
+                        {
+                            "children": [],
+                            "name": "流量计",
+                        },
+                        {
+                            "children": [],
+                            "name": "真空泵",
+                        },
+                        {
+                            "children": [],
+                            "name": "尾气冷凝器",
+                        },
+                        {
+                            "children": [],
+                            "name": "尾气处理装置",
+                        },
+                        {
+                            "children": [],
+                            "name": "油雾分离器",
+                        },
+                        {
+                            "children": [],
+                            "name": "检漏仪",
+                        },
+                    ],
+                    "name": "气路系统",
+                },
+                {
+                    "children": [],
+                    "name": "预热与散热系统",
+                },
+                {
+                    "children": [
+                        {
+                            "children": [],
+                            "name": "液位计", 
+                        },
+                        {
+                            "children": [],
+                            "name": "压力计", 
+                        },
+                        {
+                            "children": [],
+                            "name": "流量计", 
+                        },
+                        {
+                            "children": [],
+                            "name": "温度传感器", 
+                        },
+                        {
+                            "children": [],
+                            "name": "转速仪", 
+                        },
+                        {
+                            "children": [],
+                            "name": "功率测量仪", 
+                        },
+                        {
+                            "children": [],
+                            "name": "噪声测量仪", 
+                        },
+                    ],
+                    "name": "测控系统",
+                },
+                {
+                    children:[
+                        {
+                            "children": [],
+                            "name": "钢结构平台", 
+                        },
+                        {
+                            "children": [],
+                            "name": "设备支撑", 
+                        },
 
-const rankingListData = [];
-for (let i = 0; i < 7; i += 1) {
-  rankingListData.push({
-    title: `工专路 ${i} 号店`,
-    total: 323234,
-  });
-}
+                    ],
+                    name: "支持系统",
+                },
+            ],
+            "name": "泵测试台",
+        }
 
-@connect(({ chart, loading }) => ({
-  chart,
-  loading: loading.effects['chart/fetch'],
-}))
-export default class Analysis extends Component {
-  state = {
-    currentTabKey: '',
-    rangePickerValue: getTimeDistance('year'),
-  };
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'chart/fetch',
-    });
-  }
-
-  componentWillUnmount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'chart/clear',
-    });
-  }
-
-  handleTabChange = key => {
-    this.setState({
-      currentTabKey: key,
-    });
-  };
-
-  handleRangePickerChange = rangePickerValue => {
-    this.setState({
-      rangePickerValue,
-    });
-
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'chart/fetchSalesData',
-    });
-  };
-
-  selectDate = type => {
-    this.setState({
-      rangePickerValue: getTimeDistance(type),
-    });
-
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'chart/fetchSalesData',
-    });
-  };
-
-  isActive(type) {
-    const { rangePickerValue } = this.state;
-    const value = getTimeDistance(type);
-    if (!rangePickerValue[0] || !rangePickerValue[1]) {
-      return;
+        // 基于准备好的dom，初始化echarts实例
+        const myChart = echarts.init(document.getElementById('main'));
+        // 绘制图表
+        myChart.setOption({
+            title:{
+                text:"设备信息",
+            },
+            tooltip: {
+                // show：'true',//默认：true；是否显示提示框组件，包括提示框浮层和 axisPointer。
+                trigger: 'item',// 默认：item；触发类型。item：数据项图形触发，主要在散点图，饼图等无类目轴的图表中使用。'axis'：坐标轴触发，主要在柱状图，折线图等会使用类目轴的图表中使用。'none':什么都不触发。
+                triggerOn: 'mousemove',
+            },
+            series:[
+                {
+                    type: 'tree',
+ 
+                    data: [data],
+ 
+                    left: '7%',
+                    right: '20%',
+                    top: '1%',
+                    bottom: '1%',
+ 
+                    symbolSize: 15,
+ 
+                    // orient: 'vertical',
+ 
+                    expandAndCollapse: true,// 默认：true；子树折叠和展开的交互，默认打开 。
+ 
+                    initialTreeDepth:1,// 默认：2，树图初始展开的层级（深度）。根节点是第 0 层，然后是第 1 层、第 2 层，... ，直到叶子节点
+ 
+                    label: {
+                        normal: {
+                            position: 'left',
+                            verticalAlign: 'middle',// 文字垂直对齐方式，默认自动。
+                            align: 'right',// 文字水平对齐方式，默认自动。
+                            fontSize: 20,// 文字的字体大小
+                        },
+                    },
+ 
+                    leaves: {
+                        label: {
+                            normal: {
+                                position: 'right',
+                                verticalAlign: 'middle',
+                                align: 'left',
+                            },
+                        },
+                    },
+                    animationDurationUpdate: 750,       
+                },
+            ],
+        });  
     }
-    if (
-      rangePickerValue[0].isSame(value[0], 'day') &&
-      rangePickerValue[1].isSame(value[1], 'day')
-    ) {
-      return styles.currentDate;
+    
+    render () {
+        const columns = [
+            {
+              title: '设备',
+              dataIndex: 'device',
+              key: 'device',
+            },
+            {
+              title: '参数名',
+              dataIndex: 'parameter',
+              key: 'parameter',
+              render: text => <a href="/">{text}</a>,
+            },
+            {
+              title: '数值',
+              dataIndex: 'value',
+              key: 'value',
+              sorter: (a, b) => a.value - b.value,
+              
+            },
+            {
+              title: '备注',
+              dataIndex: 'mark',
+              key: 'mark',
+              sorter: (a, b) => a.mark - b.mark,
+              align: 'right',
+            },
+          ];
+          const searchData = [{index: 1,device:"泵", parameter: "熔盐用量", value: "0.8m3", mark: "泵罐和管道中的熔盐最大用量"
+          , status: 0},
+          {index: 2,device:"泵", parameter: "设计流量范围", value: "0~400m3/h", mark: "适用于样机"
+          , status: 1},
+          {index: 3,device:"泵", parameter: "保温层厚度", value: "250mm", mark: "", status: 0},
+          {index: 4,device:"泵", parameter: "主回路热损失", value: "9kw", mark: "", status: 0 },
+          {index: 5,device:"泵", parameter: "温升速率", value: "1.32C/min", mark: "保守值为1.58C/min", status: 0},
+          {index: 6,device:"泵", parameter: "散热功率", value: "45.9kw", mark: "", status: 0},
+          {index: 7,device:"泵", parameter: "泵罐液位波动", value: "49.6mm", mark: "正常运行状态下", status: 0},
+          {index: 8,device:"泵", parameter: "触液材质", value: "316H", mark: "", status: 0},
+        ];
+
+        const { selectedRowKeys } = this.state;
+        const rowSelection = {
+          selectedRowKeys,
+          onChange: this.onSelectChange,
+          hideDefaultSelections: true,
+          selections: [{
+            key: '主回路',
+            text: '主回路系统',
+            onSelect: () => {
+              this.setState({
+                selectedRowKeys: [...Array(4).keys()], // 0...4
+              });
+            },
+          }, {
+            key: '熔盐储存与加载系统',
+            text: '熔盐储存与加载系统',
+            onSelect: () => {
+            },
+          }],
+          onSelection: this.onSelection,
+        };
+        return (
+          <Fragment>
+            <Row gutter={24}>
+              <Card
+                bordered={false}
+                bodyStyle={{ padding: '0 0 32px 0' }}
+                style={{ marginTop: 32 }}
+              >
+                <div id="main" style={{ width: '2000px', height: '500px' }} />    
+              </Card>
+              <Card
+                bordered={false}
+                bodyStyle={{ padding: '0 0 32px 0' }}
+                style={{ marginTop: 32 }}
+              >
+                <Table
+                  title={()=>{return "设备参数"}}
+                  rowKey={record => record.index}
+                  size="small"
+                  columns={columns}
+                  dataSource={searchData}
+                  pagination={{
+                    style: { marginBottom: 0 },
+                       pageSize: 5,
+                     }}
+                  rowSelection={rowSelection}
+                />     
+              </Card>
+            </Row>
+          </Fragment>
+        );
     }
-  }
-
-  render() {
-    const {  currentTabKey } = this.state;
-    const { chart, loading } = this.props;
-    const {
-      offlineData,
-      offlineChartData,
-    } = chart;
-
-
-
-
-    const activeKey = currentTabKey || (offlineData[0] && offlineData[0].name);
-
-    const CustomTab = ({ data, currentTabKey: currentKey }) => (
-      <Row gutter={8} style={{ width: 138, margin: '8px 0' }}>
-        <Col span={12}>
-          <NumberInfo
-            title={data.name}
-            subTitle="转化率"
-            gap={2}
-            total={`${data.cvr * 100}%`}
-            theme={currentKey !== data.name && 'light'}
-          />
-        </Col>
-        <Col span={12} style={{ paddingTop: 36 }}>
-          <Pie
-            animate={false}
-            color={currentKey !== data.name && '#BDE4FF'}
-            inner={0.55}
-            tooltip={false}
-            margin={[0, 0, 0, 0]}
-            percent={data.cvr * 100}
-            height={64}
-          />
-        </Col>
-      </Row>
-    );
-
-
-    return (
-      <Fragment>   
-
-        <Card
-          loading={loading}
-          className={styles.offlineCard}
-          bordered={false}
-          bodyStyle={{ padding: '0 0 32px 0' }}
-          style={{ marginTop: 32 }}
-        >
-          <Tabs activeKey={activeKey} onChange={this.handleTabChange}>
-            {offlineData.map(shop => (
-              <TabPane tab={<CustomTab data={shop} currentTabKey={activeKey} />} key={shop.name}>
-                <div style={{ padding: '0 24px' }}>
-                  <TimelineChart
-                    height={400}
-                    data={offlineChartData}
-                    titleMap={{ y1: '客流量', y2: '支付笔数' }}
-                  />
-                </div>
-              </TabPane>
-            ))}
-          </Tabs>
-        </Card>
-      </Fragment>
-    );
-  }
 }
+export default EchartsTest;
